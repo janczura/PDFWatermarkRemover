@@ -22,18 +22,23 @@ the Main class may need to be adjusted to fit your specific requirements. Below 
 currently looks:
 
 ```java
-static String separator=File.separator;
+public class Main {
+  static String separator = File.separator;
 
-public static void main(String[]args)throws Exception{
-        String pdfFilePath = "src" + separator + "main" + separator + "resources" + separator + "example.pdf"; // from https://renmich.faculty.wmi.amu.edu.pl/BSM/wyklady/Hasla.pdf
-        String tempDirPath = PDFToImages.convertPdfToImages(pdfFilePath);
-        //WatermarkRemover method = new PositionWatermarkRemover(147, 3053, 821, 3108);
-        //WatermarkRemover method = new ColorWatermarkRemover(Color.BLACK);
-        WatermarkRemover method = new RenMichWatermarkRemover(6);
-        FileManager.removerWatermarks(method, tempDirPath);
-        ImagesToPDF.convertImagesToPDF(tempDirPath, pdfFilePath + ".new.pdf");
-        FileManager.removeTempDir(tempDirPath);
-        }
+  public static void main(String[] args) throws Exception {
+    String pdfFilePath = "src" + separator + "main" + separator + "resources" + separator + "example.pdf"; // from https://renmich.faculty.wmi.amu.edu.pl/BSM/wyklady/Hasla.pdf
+    String tempDirPath = PDFToImages.convertPdfToImages(pdfFilePath);
+    WatermarkRemover method = switch (new Random().nextInt(3)) {
+      case 0 -> new PositionWatermarkRemover(147, 3053, 821, 3108);
+      case 1 -> new ColorWatermarkRemover(Color.BLACK);
+      case 2 -> new RenMichWatermarkRemover(9);
+      default -> null;
+    };
+    FileManager.removerWatermarks(method, tempDirPath);
+    ImagesToPDF.convertImagesToPDF(tempDirPath, pdfFilePath + ".new.pdf");
+    FileManager.removeTempDir(tempDirPath);
+  }
+}
 ```
 
 ## Resources
